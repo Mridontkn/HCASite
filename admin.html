@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Commissioner Panel</title>
+</head>
+<body>
+
+    <h1>Commissioner Panel</h1>
+
+    <input type="password" id="adminKey" placeholder="Admin Key">
+
+    <br><br>
+
+    <textarea id="newsContent" rows="10" cols="50"></textarea>
+
+    <br><br>
+
+    <button onclick="updateLeague()">
+        Update Site
+    </button>
+
+    <script>
+
+        const BACKEND_URL = "https://YOUR_BACKEND_URL.onrender.com";
+
+        async function updateLeague() {
+
+            const adminKey =
+                document.getElementById("adminKey").value;
+
+            const content =
+                document.getElementById("newsContent").value;
+
+            const body = {
+                news: [
+                    {
+                        title: "League Update",
+                        content: content
+                    }
+                ]
+            };
+
+            const response = await fetch(
+                `${BACKEND_URL}/api/update`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "admin-key": adminKey
+                    },
+                    body: JSON.stringify(body)
+                }
+            );
+
+            const data = await response.json();
+
+            alert(data.message);
+        }
+
+    </script>
+
+</body>
+</html>
