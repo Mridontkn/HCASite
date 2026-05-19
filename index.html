@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>HCA — Hockey Club Association</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#0A1628;--navy-mid:#132040;--navy-light:#1C2F55;
+  --gold:#C9963A;--gold-light:#E8B84B;
+  --text:#E8EDF5;--text-muted:#8A99B5;--text-dim:#5A6880;
+  --border:rgba(255,255,255,0.07);--border-light:rgba(255,255,255,0.13);
+  --card:rgba(255,255,255,0.04);--card-hover:rgba(255,255,255,0.07);
+  --font-display:'Barlow Condensed',sans-serif;--font-body:'Barlow',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.6;min-height:100vh;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(10,22,40,0.97);border-bottom:1px solid var(--border-light);backdrop-filter:blur(12px);display:flex;align-items:center;padding:0 1.5rem;height:60px;}
+.nav-logo{font-family:var(--font-display);font-size:1.5rem;font-weight:900;letter-spacing:0.08em;color:var(--gold);margin-right:2rem;text-transform:uppercase;cursor:pointer;}
+.nav-logo span{color:var(--text);}
+.nav-links{display:flex;gap:0;flex:1;overflow-x:auto;}
+.nav-link{font-family:var(--font-display);font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);padding:0 0.85rem;height:60px;display:flex;align-items:center;cursor:pointer;border-bottom:3px solid transparent;transition:color 0.15s,border-color 0.15s;white-space:nowrap;}
+.nav-link:hover{color:var(--text);}
+.nav-link.active{color:var(--gold);border-bottom-color:var(--gold);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:0.75rem;flex-shrink:0;padding-left:1rem;}
+.nav-live{display:flex;align-items:center;gap:6px;background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.4);border-radius:4px;padding:4px 10px;font-family:var(--font-display);font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#E74C3C;cursor:pointer;text-decoration:none;}
+.live-dot{width:7px;height:7px;background:#E74C3C;border-radius:50%;animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.nav-admin{font-family:var(--font-display);font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border-light);padding:4px 12px;border-radius:4px;cursor:pointer;transition:all 0.15s;}
+.nav-admin:hover{color:var(--text);border-color:var(--text-muted);}
+
+.page{display:none;animation:fadeIn 0.2s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.page-hero{padding:2.5rem 2rem 1.5rem;border-bottom:1px solid var(--border);}
+.page-hero-label{font-family:var(--font-display);font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
+.page-hero-title{font-family:var(--font-display);font-size:2.8rem;font-weight:900;text-transform:uppercase;letter-spacing:0.04em;line-height:1;color:var(--text);}
+.page-hero-sub{color:var(--text-muted);margin-top:0.4rem;font-size:0.88rem;font-weight:300;}
+
+/* HOME */
+.home-hero{position:relative;padding:4.5rem 2rem 3.5rem;text-align:center;overflow:hidden;}
+.home-hero::before{content:'HCA';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:20rem;font-weight:900;color:rgba(255,255,255,0.018);letter-spacing:-0.05em;pointer-events:none;white-space:nowrap;}
+.home-season-badge{display:inline-block;font-family:var(--font-display);font-size:0.7rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,150,58,0.4);padding:5px 14px;border-radius:3px;margin-bottom:1.25rem;}
+.home-title{font-family:var(--font-display);font-size:4.5rem;font-weight:900;text-transform:uppercase;letter-spacing:0.06em;line-height:0.9;color:var(--text);margin-bottom:0.5rem;}
+.home-title span{color:var(--gold);}
+.home-subtitle{font-size:1rem;color:var(--text-muted);font-weight:300;margin-bottom:2rem;letter-spacing:0.04em;}
+.home-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-primary{font-family:var(--font-display);font-size:0.8rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;background:var(--gold);color:var(--navy);border:none;padding:11px 28px;border-radius:4px;cursor:pointer;transition:background 0.15s;}
+.btn-primary:hover{background:var(--gold-light);}
+.btn-secondary{font-family:var(--font-display);font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:transparent;color:var(--text);border:1px solid var(--border-light);padding:11px 28px;border-radius:4px;cursor:pointer;transition:all 0.15s;text-decoration:none;display:inline-block;}
+.btn-secondary:hover{border-color:var(--text-muted);background:var(--card-hover);}
+
+.home-panels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.home-panel{background:var(--navy);padding:1.75rem 2rem;cursor:pointer;transition:background 0.15s;}
+.home-panel:hover{background:var(--card);}
+.panel-label{font-family:var(--font-display);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.75rem;}
+
+/* STANDINGS */
+.standings-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem;padding:2rem;}
+.conf-title{font-family:var(--font-display);font-size:1rem;font-weight:900;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);padding-bottom:0.75rem;border-bottom:2px solid var(--gold);margin-bottom:0;}
+.standings-table{width:100%;border-collapse:collapse;}
+.standings-table th{font-family:var(--font-display);font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);padding:9px 7px;text-align:center;border-bottom:1px solid var(--border);}
+.standings-table th:first-child{text-align:left;padding-left:0;}
+.standings-table td{padding:9px 7px;text-align:center;font-size:0.85rem;color:var(--text-muted);border-bottom:1px solid var(--border);}
+.standings-table td:first-child{text-align:left;padding-left:0;}
+.standings-table tr:hover td{background:var(--card);cursor:pointer;}
+.team-cell{display:flex;align-items:center;gap:8px;}
+.team-swatch{width:4px;height:26px;border-radius:2px;flex-shrink:0;}
+.team-rank{font-family:var(--font-display);font-size:0.72rem;font-weight:700;color:var(--text-dim);width:16px;text-align:right;flex-shrink:0;}
+.team-name-cell{font-family:var(--font-display);font-size:0.88rem;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;color:var(--text);}
+.team-city{font-size:0.68rem;color:var(--text-dim);font-weight:400;text-transform:uppercase;letter-spacing:0.04em;}
+.pts-cell{font-weight:700;color:var(--text)!important;font-size:0.92rem!important;}
+
+/* TEAMS GRID */
+.teams-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.team-card{background:var(--navy);padding:1.4rem;cursor:pointer;transition:background 0.15s;border-left:3px solid transparent;}
+.team-card:hover{background:var(--card);}
+.team-card-name{font-family:var(--font-display);font-size:1.05rem;font-weight:900;text-transform:uppercase;letter-spacing:0.04em;line-height:1.1;margin-bottom:2px;}
+.team-card-city{font-size:0.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.85rem;}
+.team-card-stats{display:flex;gap:1rem;}
+.team-card-stat{font-size:0.72rem;color:var(--text-dim);}
+.team-card-stat strong{display:block;font-family:var(--font-display);font-size:0.95rem;font-weight:700;color:var(--text-muted);}
+
+/* ROSTER DETAIL */
+.back-btn{font-family:var(--font-display);font-size:0.75rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;margin-bottom:1.5rem;display:inline-flex;align-items:center;gap:6px;transition:color 0.15s;}
+.back-btn:hover{color:var(--gold);}
+.roster-hero{display:flex;align-items:flex-end;gap:1.5rem;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.roster-logo{width:72px;height:72px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.8rem;font-weight:900;flex-shrink:0;}
+.roster-team-name{font-family:var(--font-display);font-size:2.8rem;font-weight:900;text-transform:uppercase;letter-spacing:0.04em;line-height:1;}
+.roster-team-city{font-size:0.82rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;}
+.roster-meta{display:flex;gap:2rem;margin-top:0.4rem;flex-wrap:wrap;}
+.roster-meta-item{font-size:0.78rem;}
+.roster-meta-item strong{color:var(--gold);font-weight:600;}
+
+.lines-title{font-family:var(--font-display);font-size:0.68rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.85rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);}
+.lines-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.85rem;margin-bottom:2rem;}
+.line-label{font-family:var(--font-display);font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.4rem;}
+.line-player{padding:5px 9px;border-left:2px solid var(--border-light);margin-bottom:3px;font-size:0.82rem;color:var(--text-muted);}
+.line-player strong{display:block;font-weight:600;font-size:0.85rem;color:var(--text);}
+.line-player span{font-size:0.68rem;color:var(--text-dim);}
+
+.roster-table{width:100%;border-collapse:collapse;}
+.roster-table th{font-family:var(--font-display);font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
+.roster-table th.center{text-align:center;}
+.roster-table td{padding:8px 10px;font-size:0.85rem;color:var(--text-muted);border-bottom:1px solid var(--border);}
+.roster-table td.center{text-align:center;}
+.roster-table tr:hover td{background:var(--card);}
+.player-name{font-weight:600;color:var(--text)!important;}
+.pos-badge{font-family:var(--font-display);font-size:0.62rem;font-weight:800;letter-spacing:0.08em;padding:2px 6px;border-radius:3px;background:var(--card);border:1px solid var(--border-light);color:var(--text-muted);}
+.ovr-cell{font-family:var(--font-display);font-weight:700;color:var(--text)!important;}
+
+/* STATS */
+.stats-filters{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 2rem;background:rgba(255,255,255,0.02);}
+.stats-filter{font-family:var(--font-display);font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);padding:12px 16px;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+.stats-filter.active{color:var(--gold);border-bottom-color:var(--gold);}
+.stats-filter:hover{color:var(--text-muted);}
+.stats-table-wrap{padding:2rem;overflow-x:auto;}
+.stats-table{width:100%;border-collapse:collapse;min-width:600px;}
+.stats-table th{font-family:var(--font-display);font-size:0.62rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);padding:9px 10px;text-align:center;border-bottom:1px solid var(--border);white-space:nowrap;}
+.stats-table th:nth-child(2){text-align:left;}
+.stats-table td{padding:9px 10px;text-align:center;font-size:0.85rem;color:var(--text-muted);border-bottom:1px solid var(--border);}
+.stats-table td:nth-child(2){text-align:left;}
+.stats-table tr:hover td{background:var(--card);}
+.rank-num{font-family:var(--font-display);font-size:0.78rem;font-weight:700;color:var(--text-dim);}
+
+/* SCHEDULE */
+.schedule-wrap{padding:2rem;}
+.week-label{font-family:var(--font-display);font-size:0.65rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.75rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);}
+.game-row{display:grid;grid-template-columns:130px 1fr 80px 1fr 110px;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);gap:1rem;}
+.game-date{font-size:0.78rem;color:var(--text-dim);}
+.game-team{font-family:var(--font-display);font-size:0.92rem;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;}
+.game-away{text-align:right;}
+.game-home{text-align:left;}
+.game-vs{text-align:center;font-family:var(--font-display);font-size:0.72rem;font-weight:800;letter-spacing:0.1em;color:var(--text-dim);text-transform:uppercase;}
+.game-status{text-align:right;font-family:var(--font-display);font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;}
+.status-upcoming{color:var(--gold);}
+
+/* TRADES */
+.trades-wrap{padding:2rem;}
+.trade-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.2rem 1.4rem;margin-bottom:0.85rem;}
+.trade-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;}
+.trade-date{font-family:var(--font-display);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);}
+.trade-tag{font-family:var(--font-display);font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;padding:3px 10px;border-radius:3px;background:rgba(201,150,58,0.12);border:1px solid rgba(201,150,58,0.3);color:var(--gold);}
+.trade-body{display:grid;grid-template-columns:1fr 36px 1fr;gap:0.75rem;align-items:center;}
+.trade-team-name{font-family:var(--font-display);font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem;}
+.trade-arrow{text-align:center;font-size:1.1rem;color:var(--text-dim);}
+.trade-item{font-size:0.82rem;color:var(--text-muted);padding:2px 0;display:flex;align-items:center;gap:6px;}
+.trade-item::before{content:'';display:inline-block;width:4px;height:4px;background:var(--gold);border-radius:50%;flex-shrink:0;}
+
+/* NEWS */
+.news-wrap{display:grid;grid-template-columns:2fr 1fr;gap:2rem;padding:2rem;}
+.news-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.4rem;margin-bottom:0.85rem;cursor:pointer;transition:border-color 0.15s,background 0.15s;}
+.news-card:hover{border-color:var(--border-light);background:var(--card-hover);}
+.news-card-tag{font-family:var(--font-display);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;}
+.news-card-title{font-family:var(--font-display);font-size:1.15rem;font-weight:800;text-transform:uppercase;letter-spacing:0.02em;line-height:1.2;color:var(--text);margin-bottom:0.4rem;}
+.news-card-body{font-size:0.83rem;color:var(--text-muted);line-height:1.6;margin-bottom:0.6rem;}
+.news-card-date{font-size:0.72rem;color:var(--text-dim);}
+
+/* TWITCH */
+.twitch-embed-placeholder{background:#6441A4;aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;position:relative;}
+.twitch-logo{font-family:var(--font-display);font-size:2.8rem;font-weight:900;color:white;letter-spacing:0.04em;}
+.twitch-channel{font-family:var(--font-display);font-size:0.78rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.6);}
+.twitch-live-badge{position:absolute;top:1rem;left:1rem;display:flex;align-items:center;gap:6px;background:#E74C3C;padding:4px 10px;border-radius:4px;font-family:var(--font-display);font-size:0.7rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:white;}
+
+/* ADMIN */
+.admin-login{max-width:380px;margin:3rem auto;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:2.5rem;}
+.form-label{display:block;font-family:var(--font-display);font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.4rem;}
+.form-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-light);border-radius:4px;padding:10px 14px;font-family:var(--font-body);font-size:0.9rem;color:var(--text);outline:none;transition:border-color 0.15s;margin-bottom:1.1rem;}
+.form-input:focus{border-color:var(--gold);}
+.admin-panel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.admin-panel-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.2rem;cursor:pointer;transition:border-color 0.15s,background 0.15s;}
+.admin-panel-card:hover{border-color:var(--gold);background:var(--card-hover);}
+.admin-panel-icon{font-size:1.4rem;margin-bottom:0.4rem;}
+.admin-panel-title{font-family:var(--font-display);font-size:0.88rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.2rem;}
+.admin-panel-desc{font-size:0.75rem;color:var(--text-dim);}
+
+footer{border-top:1px solid var(--border);padding:1.75rem 2rem;display:flex;align-items:center;justify-content:space-between;margin-top:4rem;}
+.footer-logo{font-family:var(--font-display);font-size:1rem;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);}
+.footer-text{font-size:0.72rem;color:var(--text-dim);}
+
+@media(max-width:900px){
+  .standings-wrap{grid-template-columns:1fr;}
+  .home-panels{grid-template-columns:1fr;}
+  .teams-grid{grid-template-columns:repeat(2,1fr);}
+  .lines-grid{grid-template-columns:repeat(2,1fr);}
+  .news-wrap{grid-template-columns:1fr;}
+  .admin-panel-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">HCA<span>.</span></div>
+  <div class="nav-links">
+    <div class="nav-link" onclick="showPage('home')" id="nav-home">Home</div>
+    <div class="nav-link" onclick="showPage('standings')" id="nav-standings">Standings</div>
+    <div class="nav-link" onclick="showPage('rosters');showTeamsList()" id="nav-rosters">Rosters</div>
+    <div class="nav-link" onclick="showPage('stats')" id="nav-stats">Stats</div>
+    <div class="nav-link" onclick="showPage('schedule')" id="nav-schedule">Schedule</div>
+    <div class="nav-link" onclick="showPage('trades')" id="nav-trades">Trades</div>
+    <div class="nav-link" onclick="showPage('news')" id="nav-news">News</div>
+  </div>
+  <div class="nav-right">
+    <a class="nav-live" href="https://www.twitch.tv/tml_ttv" target="_blank"><div class="live-dot"></div>Watch Live</a>
+    <div class="nav-admin" onclick="showPage('admin')">Commissioner</div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <div class="home-season-badge">Season 1 — Pre-Season</div>
+    <div class="home-title">Hockey Club<br><span>Association</span></div>
+    <div class="home-subtitle">18 Teams · 2 Conferences · 1 Champion</div>
+    <div class="home-ctas">
+      <button class="btn-primary" onclick="showPage('standings')">View Standings</button>
+      <a class="btn-secondary" href="https://www.twitch.tv/tml_ttv" target="_blank">Watch on Twitch</a>
+      <button class="btn-secondary" onclick="showPage('rosters');showTeamsList()">Team Rosters</button>
+    </div>
+  </div>
+  <div class="home-panels">
+    <div class="home-panel" onclick="showPage('standings')">
+      <div class="panel-label">Eastern Conference</div>
+      <div style="display:flex;flex-direction:column;gap:6px;" id="home-east-top"></div>
+    </div>
+    <div class="home-panel" onclick="showPage('standings')">
+      <div class="panel-label">Western Conference</div>
+      <div style="display:flex;flex-direction:column;gap:6px;" id="home-west-top"></div>
+    </div>
+    <div class="home-panel" onclick="showPage('news')">
+      <div class="panel-label">Latest from the Commissioner</div>
+      <div style="font-family:var(--font-display);font-size:1.05rem;font-weight:800;text-transform:uppercase;letter-spacing:0.03em;line-height:1.2;color:var(--text);">Season 1 Officially Underway</div>
+      <div style="font-size:0.8rem;color:var(--text-dim);margin-top:0.4rem;">18 franchises. 2 conferences. All games live on Twitch.</div>
+    </div>
+  </div>
+  <div style="padding:2rem;">
+    <div class="panel-label" style="font-family:var(--font-display);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">All 18 Franchises</div>
+    <div class="teams-grid" id="home-teams-grid"></div>
+  </div>
+</div>
+
+<!-- STANDINGS -->
+<div class="page" id="page-standings">
+  <div class="page-hero">
+    <div class="page-hero-label">Season 1</div>
+    <div class="page-hero-title">Standings</div>
+    <div class="page-hero-sub">Season has not yet begun — all records 0-0-0</div>
+  </div>
+  <div class="standings-wrap" id="standings-content"></div>
+</div>
+
+<!-- ROSTERS -->
+<div class="page" id="page-rosters">
+  <div id="rosters-teams-view">
+    <div class="page-hero">
+      <div class="page-hero-label">2025–26 Season</div>
+      <div class="page-hero-title">Teams & Rosters</div>
+      <div class="page-hero-sub">Select a team to view full roster and lines</div>
+    </div>
+    <div class="teams-grid" id="rosters-teams-grid"></div>
+  </div>
+  <div id="roster-detail-view" style="display:none;padding:2rem;"></div>
+</div>
+
+<!-- STATS -->
+<div class="page" id="page-stats">
+  <div class="page-hero">
+    <div class="page-hero-label">2025–26 Season</div>
+    <div class="page-hero-title">Stats</div>
+    <div class="page-hero-sub">Team stats are empty for now. Commissioner's portal makes updates easy.</div>
+  </div>
+  <div class="stats-table-wrap" id="stats-content">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:2rem;text-align:center;color:var(--text-dim);">
+      <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.5rem;color:var(--text-muted);">Official stats are not yet entered</div>
+      <div>Open the Commissioner portal and use the stats manager to add or edit team statistics.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="page" id="page-schedule">
+  <div class="page-hero">
+    <div class="page-hero-label">2025–26 Season</div>
+    <div class="page-hero-title">Schedule</div>
+    <div class="page-hero-sub">Season schedule to be announced — check back soon</div>
+  </div>
+  <div class="schedule-wrap">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:2rem;text-align:center;color:var(--text-dim);">
+      <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.5rem;color:var(--text-muted);">Schedule Coming Soon</div>
+      <div style="font-size:0.85rem;">Games will be posted here once the season schedule is finalized. All games streamed live on <a href="https://www.twitch.tv/tml_ttv" target="_blank" style="color:var(--gold);">Twitch</a>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRADES -->
+<div class="page" id="page-trades">
+  <div class="page-hero">
+    <div class="page-hero-label">Transaction Log</div>
+    <div class="page-hero-title">Trade Tracker</div>
+    <div class="page-hero-sub">All trades, signings, and transactions — official and verified by the HCA</div>
+  </div>
+  <div class="trades-wrap" id="trades-content">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:2rem;text-align:center;color:var(--text-dim);">
+      <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.5rem;color:var(--text-muted);">No Transactions Yet</div>
+      <div style="font-size:0.85rem;">All trades and signings will appear here once the season begins.</div>
+    </div>
+  </div>
+</div>
+
+<!-- NEWS -->
+<div class="page" id="page-news">
+  <div class="page-hero">
+    <div class="page-hero-label">Commissioner's Office</div>
+    <div class="page-hero-title">League News</div>
+  </div>
+  <div class="news-wrap">
+    <div>
+      <div class="news-card">
+        <div class="news-card-tag">Commissioner Announcement</div>
+        <div class="news-card-title">Season 1 of the HCA is Here</div>
+        <div class="news-card-body">The Hockey Club Association officially launches with 18 franchises across two conferences. All games will be played CPU vs CPU in NHL26 and streamed live on Twitch at tml_ttv. Rosters have been set, lines are locked in — it's time to play hockey.</div>
+        <div class="news-card-date">2025–26 Pre-Season</div>
+      </div>
+      <div class="news-card">
+        <div class="news-card-tag">League Info</div>
+        <div class="news-card-title">How the HCA Works</div>
+        <div class="news-card-body">Each of the 18 franchises is owned and managed by a real GM. Trades, signings, and line changes are submitted to the commissioner group and applied in-game. Games are streamed live on Twitch for the whole world to watch.</div>
+        <div class="news-card-date">2025–26 Pre-Season</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:var(--font-display);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;">Quick Links</div>
+      <div onclick="showPage('standings')" style="padding:10px 0;border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);cursor:pointer;">Standings →</div>
+      <div onclick="showPage('rosters');showTeamsList()" style="padding:10px 0;border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);cursor:pointer;">Team Rosters →</div>
+      <div onclick="showPage('trades')" style="padding:10px 0;border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);cursor:pointer;">Trade Tracker →</div>
+      <div onclick="showPage('schedule')" style="padding:10px 0;border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);cursor:pointer;">Schedule →</div>
+      <a href="https://www.twitch.tv/tml_ttv" target="_blank" style="padding:10px 0;display:block;border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);text-decoration:none;">Watch on Twitch →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="page-hero">
+    <div class="page-hero-label">Restricted Access</div>
+    <div class="page-hero-title">Commissioner Portal</div>
+  </div>
+  <div style="padding:2rem;">
+    <div id="admin-login-view">
+      <div class="admin-login">
+        <div style="font-family:var(--font-display);font-size:1.4rem;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.2rem;">Sign In</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);margin-bottom:1.75rem;">Commissioner access only</div>
+        <label class="form-label">Username</label>
+        <input class="form-input" type="text" placeholder="commissioner"/>
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" placeholder="••••••••"/>
+        <button class="btn-primary" style="width:100%;margin-top:0.25rem;" onclick="showAdminPanel()">Sign In</button>
+      </div>
+    </div>
+    <div id="admin-panel-view" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+        <div>
+          <div style="font-family:var(--font-display);font-size:0.65rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);">Welcome back</div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;">Commissioner Dashboard</div>
+        </div>
+        <button class="btn-secondary" onclick="document.getElementById('admin-login-view').style.display='block';document.getElementById('admin-panel-view').style.display='none';">Sign Out</button>
+      </div>
+      <div class="admin-panel-grid">
+        <div class="admin-panel-card"><div class="admin-panel-icon">📊</div><div class="admin-panel-title">Enter Game Score</div><div class="admin-panel-desc">Log final scores after each broadcast</div></div>
+        <div class="admin-panel-card"><div class="admin-panel-icon">👥</div><div class="admin-panel-title">Manage Rosters</div><div class="admin-panel-desc">Add, remove, or update players on any team</div></div>
+        <div class="admin-panel-card"><div class="admin-panel-icon">🔄</div><div class="admin-panel-title">Log a Trade</div><div class="admin-panel-desc">Record official trades between franchises</div></div>
+        <div class="admin-panel-card"><div class="admin-panel-icon">📋</div><div class="admin-panel-title">Edit Lines</div><div class="admin-panel-desc">Update forward lines and defensive pairings</div></div>
+        <div class="admin-panel-card"><div class="admin-panel-icon">📰</div><div class="admin-panel-title">Post Announcement</div><div class="admin-panel-desc">Publish news or commissioner statements</div></div>
+        <div class="admin-panel-card"><div class="admin-panel-icon">📅</div><div class="admin-panel-title">Schedule Games</div><div class="admin-panel-desc">Add upcoming games and stream dates</div></div>
+        <div class="admin-panel-card" onclick="toggleStatsEditor()"><div class="admin-panel-icon">📈</div><div class="admin-panel-title">Edit Stats</div><div class="admin-panel-desc">Use the guided stats manager to update team totals.</div></div>
+      </div>
+      <div id="admin-stats-editor" style="display:none;margin-top:2rem;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1rem;">
+          <div>
+            <div class="panel-label">Stats Manager</div>
+            <div style="font-size:0.85rem;color:var(--text-dim);margin-top:0.4rem;">Pick a team, enter values, then save. No code editing required.</div>
+          </div>
+          <button class="btn-secondary" onclick="document.getElementById('admin-stats-editor').style.display='none';">Close</button>
+        </div>
+        <label class="form-label">Team</label>
+        <select id="stats-team-select" class="form-input" onchange="populateStatsEditor()"></select>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem;">
+          <div>
+            <label class="form-label">Games Played</label>
+            <input id="stats-gp" class="form-input" type="number" min="0" value="0" />
+          </div>
+          <div>
+            <label class="form-label">Goals</label>
+            <input id="stats-g" class="form-input" type="number" min="0" value="0" />
+          </div>
+          <div>
+            <label class="form-label">Assists</label>
+            <input id="stats-a" class="form-input" type="number" min="0" value="0" />
+          </div>
+          <div>
+            <label class="form-label">Points</label>
+            <input id="stats-pts" class="form-input" type="number" min="0" value="0" />
+          </div>
+          <div>
+            <label class="form-label">Plus / Minus</label>
+            <input id="stats-plusminus" class="form-input" type="number" value="0" />
+          </div>
+          <div>
+            <label class="form-label">Penalty Minutes</label>
+            <input id="stats-pim" class="form-input" type="number" min="0" value="0" />
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:1rem;" onclick="saveStatsFromEditor()">Save Stats</button>
+        <div id="stats-editor-feedback" style="font-size:0.85rem;color:var(--gold);margin-top:0.75rem;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">HCA — Hockey Club Association</div>
+  <div class="footer-text">Season 1 · All games live on <a href="https://www.twitch.tv/tml_ttv" target="_blank" style="color:var(--gold);text-decoration:none;">twitch.tv/tml_ttv</a></div>
+</footer>
+
+<script>
+const TEAMS = [
+  // EAST
+  { id:'storm',     city:'Montreal',     name:'Storm',     color1:'#1a1a1a', color2:'#FFFFFF', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'bulldogs',  city:'Buffalo',      name:'Bulldogs',  color1:'#F5C518', color2:'#1a1a1a', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'firebirds', city:'Florida',      name:'Firebirds', color1:'#FF4500', color2:'#FF8C00', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'voyageurs', city:'Quebec',       name:'Voyageurs', color1:'#1B3A6B', color2:'#C9963A', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'imperials', city:'New York',     name:'Imperials', color1:'#0038A8', color2:'#CE1126', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'legends',   city:'New York',     name:'Legends',   color1:'#1D3D7F', color2:'#C9963A', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'liberty',   city:'Philadelphia', name:'Liberty',   color1:'#008080', color2:'#005f5f', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'towers',    city:'Toronto',      name:'Towers',    color1:'#CC0000', color2:'#FFFFFF', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'waves',     city:'Miami',        name:'Waves',     color1:'#E91E8C', color2:'#29B6F6', conf:'East', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  // WEST
+  { id:'rams',      city:'Chicago',      name:'Rams',      color1:'#0D1B4B', color2:'#4169A0', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'outlaws',   city:'Alberta',      name:'Outlaws',   color1:'#8B1A1A', color2:'#1a1a1a', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'pirates',   city:'San Francisco',name:'Pirates',   color1:'#9B1515', color2:'#2a0a0a', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'stags',     city:'Seattle',      name:'Stags',     color1:'#2E7D32', color2:'#1B5E20', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'comets',    city:'Colorado',     name:'Comets',    color1:'#E65100', color2:'#FF6D00', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'longhorns', city:'Dallas',       name:'Longhorns', color1:'#1A3A6B', color2:'#C9963A', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'notes',     city:'St. Louis',    name:'Notes',     color1:'#5BB8F5', color2:'#FFFFFF', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'vipers',    city:'Los Angeles',  name:'Magic',     color1:'#6A0DAD', color2:'#FFD700', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+  { id:'ghostpirates', city:'Portland',  name:'Ghost Pirates', color1:'#4B6F9B', color2:'#CDD5E0', conf:'West', gp:0, w:0, l:0, otl:0, pts:0, gd:0 },
+];
+
+const ROSTERS = {
+  towers: {
+    lines: [
+      { label:'Line 1', players:['D. Nils','C. Bedard','P. Martone'] },
+      { label:'Line 2', players:['J. Robertson','S. Aho','S. Stamkos'] },
+      { label:'Line 3', players:['V. Arvidsson','M. Granlund','N. Brown'] },
+      { label:'Line 4', players:['C. Perfetti','R. O\'Reilly','R. Rakell'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['J. Sanderson','G. Forsling'] },
+      { label:'Pair 2', players:['D. Orlov','R. Sandin'] },
+      { label:'Pair 3', players:['K. Revamp','M. Pettersson'] },
+    ],
+    players: [
+      { name:'D. Nils',        pos:'LW', ovr:99,  note:'' },
+      { name:'C. Bedard',      pos:'C',  ovr:94,  note:'' },
+      { name:'P. Martone',     pos:'RW', ovr:96,  note:'99 POT' },
+      { name:'J. Robertson',   pos:'LW', ovr:90,  note:'' },
+      { name:'S. Aho',         pos:'C',  ovr:90,  note:'' },
+      { name:'S. Stamkos',     pos:'C',  ovr:85,  note:'' },
+      { name:'V. Arvidsson',   pos:'RW', ovr:84,  note:'' },
+      { name:'M. Granlund',    pos:'C',  ovr:85,  note:'' },
+      { name:'N. Brown',       pos:'RW', ovr:86,  note:'' },
+      { name:'C. Perfetti',    pos:'C',  ovr:84,  note:'' },
+      { name:'R. O\'Reilly',   pos:'C',  ovr:85,  note:'' },
+      { name:'R. Rakell',      pos:'RW', ovr:85,  note:'' },
+      { name:'J. Sanderson',   pos:'D',  ovr:89,  note:'' },
+      { name:'G. Forsling',    pos:'D',  ovr:88,  note:'' },
+      { name:'D. Orlov',       pos:'D',  ovr:86,  note:'' },
+      { name:'R. Sandin',      pos:'D',  ovr:85,  note:'' },
+      { name:'K. Revamp',      pos:'D',  ovr:78,  note:'86 POT' },
+      { name:'M. Pettersson',  pos:'D',  ovr:85,  note:'' },
+      { name:'L. Thompson',    pos:'G',  ovr:89,  note:'' },
+      { name:'L. Dostal',      pos:'G',  ovr:86,  note:'' },
+      { name:'J. Marino',      pos:'D',  ovr:84,  note:'Extra' },
+      { name:'B. McMann',      pos:'LW', ovr:83,  note:'Extra' },
+    ]
+  },
+  comets: {
+    lines: [
+      { label:'Line 1', players:['Larkin','Stuzle','Guentzle'] },
+      { label:'Line 2', players:['Fiala','Cooley','Coronato'] },
+      { label:'Line 3', players:['Lehkonen','Hertl','McMichael'] },
+      { label:'Line 4', players:['Bertuzzi','Seguin','Eberle'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Heiskanen','Makar'] },
+      { label:'Pair 2', players:['Hanifin','Doughty'] },
+      { label:'Pair 3', players:['Pesce','Girard'] },
+    ],
+    players: [
+      { name:'Larkin',      pos:'C',  ovr:88, note:'' },
+      { name:'Stuzle',      pos:'C',  ovr:90, note:'' },
+      { name:'Guentzle',    pos:'LW', ovr:88, note:'' },
+      { name:'Fiala',       pos:'LW', ovr:87, note:'' },
+      { name:'Cooley',      pos:'C',  ovr:88, note:'' },
+      { name:'Coronato',    pos:'RW', ovr:87, note:'' },
+      { name:'Lehkonen',    pos:'LW', ovr:85, note:'' },
+      { name:'Hertl',       pos:'C',  ovr:86, note:'' },
+      { name:'McMichael',   pos:'C',  ovr:86, note:'' },
+      { name:'Bertuzzi',    pos:'LW', ovr:82, note:'' },
+      { name:'Seguin',      pos:'C',  ovr:86, note:'' },
+      { name:'Eberle',      pos:'RW', ovr:85, note:'' },
+      { name:'Heiskanen',   pos:'D',  ovr:90, note:'' },
+      { name:'Makar',       pos:'D',  ovr:97, note:'' },
+      { name:'Hanifin',     pos:'D',  ovr:87, note:'' },
+      { name:'Doughty',     pos:'D',  ovr:86, note:'' },
+      { name:'Pesce',       pos:'D',  ovr:86, note:'' },
+      { name:'Girard',      pos:'D',  ovr:86, note:'' },
+      { name:'Ottenger',    pos:'G',  ovr:93, note:'' },
+      { name:'Gibson',      pos:'G',  ovr:84, note:'' },
+    ]
+  },
+  bulldogs: {
+    lines: [
+      { label:'Line 1', players:['Woodman','Rant','Snuggerud'] },
+      { label:'Line 2', players:['Brindley','Dvorsky','Fiala'] },
+      { label:'Line 3', players:['Ekberg','Bennett','Nichushkin'] },
+      { label:'Line 4', players:['Burakovsky','Lowry','Kane'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Hedman','Bouchard'] },
+      { label:'Pair 2', players:['Morrissey','Moser'] },
+      { label:'Pair 3', players:['Malinski','Schmidt'] },
+    ],
+    players: [
+      { name:'Woodman',    pos:'LW', ovr:82,  note:'92 POT' },
+      { name:'Rant',       pos:'C',  ovr:92,  note:'' },
+      { name:'Snuggerud',  pos:'RW', ovr:82,  note:'89 POT' },
+      { name:'Brindley',   pos:'C',  ovr:78,  note:'87 POT' },
+      { name:'Dvorsky',    pos:'C',  ovr:81,  note:'88 POT' },
+      { name:'Fiala',      pos:'LW', ovr:87,  note:'' },
+      { name:'Ekberg',     pos:'LW', ovr:83,  note:'86 POT' },
+      { name:'Bennett',    pos:'C',  ovr:86,  note:'' },
+      { name:'Nichushkin', pos:'RW', ovr:85,  note:'' },
+      { name:'Burakovsky', pos:'LW', ovr:84,  note:'' },
+      { name:'Lowry',      pos:'C',  ovr:84,  note:'' },
+      { name:'Kane',       pos:'LW', ovr:84,  note:'' },
+      { name:'Hedman',     pos:'D',  ovr:92,  note:'' },
+      { name:'Bouchard',   pos:'D',  ovr:90,  note:'' },
+      { name:'Morrissey',  pos:'D',  ovr:90,  note:'' },
+      { name:'Moser',      pos:'D',  ovr:84,  note:'' },
+      { name:'Malinski',   pos:'D',  ovr:0,   note:'OVR TBC' },
+      { name:'Schmidt',    pos:'D',  ovr:83,  note:'' },
+      { name:'Bob',        pos:'G',  ovr:87,  note:'' },
+      { name:'George',     pos:'G',  ovr:86,  note:'' },
+      { name:'Seppanen',   pos:'C',  ovr:83,  note:'Extra' },
+      { name:'McQueen',    pos:'RW', ovr:83,  note:'Extra' },
+      { name:'Greig',      pos:'C',  ovr:83,  note:'Extra' },
+    ]
+  },
+  imperials: {
+    lines: [
+      { label:'Line 1', players:['Tkachuk','Fantilli','Cozens'] },
+      { label:'Line 2', players:['Hintz','Hughes','Vilardi'] },
+      { label:'Line 3', players:['DeBrusk','Rossi','Doan'] },
+      { label:'Line 4', players:['Sherwood','Chytil','Zetterlund'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Brodin','Karlsson'] },
+      { label:'Pair 2', players:['Siegenthaler','Hronek'] },
+      { label:'Pair 3', players:['Miller','Lohrei'] },
+    ],
+    players: [
+      { name:'Tkachuk',        pos:'LW', ovr:0, note:'' },
+      { name:'Fantilli',       pos:'C',  ovr:0, note:'' },
+      { name:'Cozens',         pos:'C',  ovr:0, note:'' },
+      { name:'Hintz',          pos:'C',  ovr:0, note:'' },
+      { name:'Hughes',         pos:'C',  ovr:0, note:'' },
+      { name:'Vilardi',        pos:'C',  ovr:0, note:'' },
+      { name:'DeBrusk',        pos:'LW', ovr:0, note:'' },
+      { name:'Rossi',          pos:'C',  ovr:0, note:'' },
+      { name:'Doan',           pos:'RW', ovr:0, note:'' },
+      { name:'Sherwood',       pos:'RW', ovr:0, note:'' },
+      { name:'Chytil',         pos:'C',  ovr:0, note:'' },
+      { name:'Zetterlund',     pos:'RW', ovr:0, note:'' },
+      { name:'Brodin',         pos:'D',  ovr:0, note:'' },
+      { name:'Karlsson',       pos:'D',  ovr:0, note:'' },
+      { name:'Siegenthaler',   pos:'D',  ovr:0, note:'' },
+      { name:'Hronek',         pos:'D',  ovr:0, note:'' },
+      { name:'Miller',         pos:'D',  ovr:0, note:'' },
+      { name:'Lohrei',         pos:'D',  ovr:0, note:'' },
+      { name:'Wolf',           pos:'G',  ovr:0, note:'' },
+      { name:'Askarov',        pos:'G',  ovr:0, note:'' },
+    ]
+  },
+  stags: {
+    lines: [
+      { label:'Line 1', players:['Spence','MacKinnon','Point'] },
+      { label:'Line 2', players:['Terry','Eichel','Tuch'] },
+      { label:'Line 3', players:['Tolvanen','Barzal','Kindel'] },
+      { label:'Line 4', players:['Kreider','Zacha','Evangelista'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Hughes','Levshunov'] },
+      { label:'Pair 2', players:['Theodore','Severson'] },
+      { label:'Pair 3', players:['Cernak','Dillon'] },
+    ],
+    players: [
+      { name:'Spence',       pos:'LW', ovr:0, note:'' },
+      { name:'MacKinnon',    pos:'C',  ovr:0, note:'' },
+      { name:'Point',        pos:'C',  ovr:0, note:'' },
+      { name:'Terry',        pos:'RW', ovr:0, note:'' },
+      { name:'Eichel',       pos:'C',  ovr:0, note:'' },
+      { name:'Tuch',         pos:'LW', ovr:0, note:'' },
+      { name:'Tolvanen',     pos:'RW', ovr:0, note:'' },
+      { name:'Barzal',       pos:'C',  ovr:0, note:'' },
+      { name:'Kindel',       pos:'RW', ovr:0, note:'' },
+      { name:'Kreider',      pos:'LW', ovr:0, note:'' },
+      { name:'Zacha',        pos:'C',  ovr:0, note:'' },
+      { name:'Evangelista',  pos:'LW', ovr:0, note:'' },
+      { name:'Hughes',       pos:'D',  ovr:0, note:'' },
+      { name:'Levshunov',    pos:'D',  ovr:0, note:'' },
+      { name:'Theodore',     pos:'D',  ovr:0, note:'' },
+      { name:'Severson',     pos:'D',  ovr:0, note:'' },
+      { name:'Cernak',       pos:'D',  ovr:0, note:'' },
+      { name:'Dillon',       pos:'D',  ovr:0, note:'' },
+      { name:'Andersen',     pos:'G',  ovr:0, note:'' },
+      { name:'Fowler',       pos:'D',  ovr:0, note:'Extra' },
+      { name:'Meuller',      pos:'RW', ovr:0, note:'Scratched, 86 POT' },
+      { name:'Carbonneau',   pos:'C',  ovr:0, note:'Scratched, 86 POT' },
+    ]
+  },
+  pirates: {
+    lines: [
+      { label:'Line 1', players:['Kucherov','Pettersson','Mustard'] },
+      { label:'Line 2', players:['Stone','Nazar','Benson'] },
+      { label:'Line 3', players:['Kyrou','McCann','Voronkov'] },
+      { label:'Line 4', players:['Kane','Karlsson','Toffoli'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Dahlin','Dobson'] },
+      { label:'Pair 2', players:['Schneider','Raddysh'] },
+      { label:'Pair 3', players:['McCarthy','Zadorov'] },
+    ],
+    players: [
+      { name:'Kucherov',   pos:'RW', ovr:95, note:'' },
+      { name:'Pettersson', pos:'C',  ovr:89, note:'' },
+      { name:'Mustard',    pos:'LW', ovr:90, note:'' },
+      { name:'Stone',      pos:'RW', ovr:88, note:'' },
+      { name:'Nazar',      pos:'C',  ovr:84, note:'89 POT' },
+      { name:'Benson',     pos:'LW', ovr:87, note:'' },
+      { name:'Kyrou',      pos:'RW', ovr:86, note:'' },
+      { name:'McCann',     pos:'C',  ovr:86, note:'' },
+      { name:'Voronkov',   pos:'LW', ovr:85, note:'' },
+      { name:'Kane',       pos:'LW', ovr:84, note:'' },
+      { name:'Karlsson',   pos:'C',  ovr:84, note:'' },
+      { name:'Toffoli',    pos:'RW', ovr:85, note:'' },
+      { name:'Kadri',      pos:'C',  ovr:84, note:'Extra' },
+      { name:'Dahlin',     pos:'D',  ovr:93, note:'' },
+      { name:'Dobson',     pos:'D',  ovr:88, note:'' },
+      { name:'Schneider',  pos:'D',  ovr:86, note:'' },
+      { name:'Raddysh',    pos:'D',  ovr:86, note:'' },
+      { name:'McCarthy',   pos:'D',  ovr:85, note:'' },
+      { name:'Zadorov',    pos:'D',  ovr:84, note:'' },
+      { name:'Ferraro',    pos:'D',  ovr:83, note:'Extra' },
+      { name:'Daigle',     pos:'G',  ovr:88, note:'' },
+      { name:'Ullmark',    pos:'G',  ovr:85, note:'' },
+    ]
+  },
+  notes: {
+    lines: [
+      { label:'Line 1', players:['Michkov','Thomas','Reinhart'] },
+      { label:'Line 2', players:['Frondell','Tavares','Marchenko'] },
+      { label:'Line 3', players:['Eklund','Zibanejad','Johnson'] },
+      { label:'Line 4', players:['Danault','Stephenson','Cowan'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Dunn','Beck'] },
+      { label:'Pair 2', players:['Ekblad','Reilly'] },
+      { label:'Pair 3', players:['Chabot','Provorov'] },
+    ],
+    players: [
+      { name:'Michkov',     pos:'RW', ovr:93, note:'' },
+      { name:'Thomas',      pos:'LW', ovr:91, note:'' },
+      { name:'Reinhart',    pos:'C',  ovr:92, note:'' },
+      { name:'Frondell',    pos:'LW', ovr:89, note:'' },
+      { name:'Tavares',     pos:'C',  ovr:87, note:'' },
+      { name:'Marchenko',   pos:'RW', ovr:86, note:'' },
+      { name:'Eklund',      pos:'LW', ovr:86, note:'' },
+      { name:'Zibanejad',   pos:'C',  ovr:86, note:'' },
+      { name:'Johnson',     pos:'RW', ovr:86, note:'' },
+      { name:'Danault',     pos:'C',  ovr:84, note:'' },
+      { name:'Stephenson',  pos:'C',  ovr:84, note:'' },
+      { name:'Cowan',       pos:'C',  ovr:80, note:'' },
+      { name:'York',        pos:'D',  ovr:84, note:'Extra' },
+      { name:'Dunn',        pos:'D',  ovr:87, note:'' },
+      { name:'Beck',        pos:'D',  ovr:89, note:'' },
+      { name:'Ekblad',      pos:'D',  ovr:86, note:'' },
+      { name:'Reilly',      pos:'D',  ovr:87, note:'' },
+      { name:'Chabot',      pos:'D',  ovr:86, note:'' },
+      { name:'Provorov',    pos:'D',  ovr:85, note:'' },
+      { name:'Saros',       pos:'G',  ovr:88, note:'' },
+      { name:'Kuemper',     pos:'G',  ovr:85, note:'' },
+    ]
+  },
+  legends: {
+    lines: [
+      { label:'Line 1', players:['Pastrnak','Crosby','Lambert'] },
+      { label:'Line 2', players:['Nylander','Suzuki','Scheifele'] },
+      { label:'Line 3', players:['Sennecke','Horvat','Poitras'] },
+      { label:'Line 4', players:['Lee','Dach','Monahan'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Dupont','Sergachev'] },
+      { label:'Pair 2', players:['Jones','Casey'] },
+      { label:'Pair 3', players:['Lindell','Jarnkrok'] },
+    ],
+    players: [
+      { name:'Pastrnak',   pos:'RW', ovr:95, note:'' },
+      { name:'Crosby',     pos:'C',  ovr:92, note:'' },
+      { name:'Lambert',    pos:'LW', ovr:82, note:'91 POT' },
+      { name:'Nylander',   pos:'RW', ovr:90, note:'' },
+      { name:'Suzuki',     pos:'C',  ovr:91, note:'' },
+      { name:'Scheifele',  pos:'C',  ovr:91, note:'' },
+      { name:'Sennecke',   pos:'RW', ovr:90, note:'' },
+      { name:'Horvat',     pos:'C',  ovr:88, note:'' },
+      { name:'Poitras',    pos:'C',  ovr:86, note:'' },
+      { name:'Lee',        pos:'LW', ovr:84, note:'' },
+      { name:'Dach',       pos:'C',  ovr:83, note:'' },
+      { name:'Monahan',    pos:'C',  ovr:84, note:'' },
+      { name:'Dupont',     pos:'D',  ovr:91, note:'' },
+      { name:'Sergachev',  pos:'D',  ovr:88, note:'' },
+      { name:'Jones',      pos:'D',  ovr:87, note:'' },
+      { name:'Casey',      pos:'D',  ovr:85, note:'87 POT' },
+      { name:'Lindell',    pos:'D',  ovr:86, note:'' },
+      { name:'Jarnkrok',   pos:'D',  ovr:85, note:'' },
+      { name:'Samuelsson', pos:'D',  ovr:84, note:'' },
+      { name:'Markstrom',  pos:'G',  ovr:88, note:'' },
+      { name:'Bussi',      pos:'G',  ovr:85, note:'' },
+    ]
+  },
+  liberty: {
+    lines: [
+      { label:'Line 1', players:['Ehlers','McDavid','Batherson'] },
+      { label:'Line 2', players:['Verhaeghe','Keller','Rust'] },
+      { label:'Line 3', players:['Neighbors','Stankoven','Ovechkin'] },
+      { label:'Line 4', players:['Moore','Cates','Backlund'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Chychrun','Sanheim'] },
+      { label:'Pair 2', players:['Pionk','Carlo'] },
+      { label:'Pair 3', players:['McCabe','Walker'] },
+    ],
+    players: [
+      { name:'McDavid',    pos:'C',  ovr:98, note:'' },
+      { name:'Ehlers',     pos:'LW', ovr:86, note:'' },
+      { name:'Batherson',  pos:'RW', ovr:87, note:'' },
+      { name:'Keller',     pos:'C',  ovr:90, note:'' },
+      { name:'Verhaeghe',  pos:'LW', ovr:86, note:'' },
+      { name:'Rust',       pos:'RW', ovr:86, note:'' },
+      { name:'Ovechkin',   pos:'LW', ovr:86, note:'' },
+      { name:'Neighbors',  pos:'LW', ovr:84, note:'' },
+      { name:'Stankoven',  pos:'C',  ovr:86, note:'' },
+      { name:'Moore',      pos:'C',  ovr:84, note:'' },
+      { name:'Cates',      pos:'C',  ovr:83, note:'' },
+      { name:'Backlund',   pos:'C',  ovr:84, note:'' },
+      { name:'Chychrun',   pos:'D',  ovr:88, note:'' },
+      { name:'Sanheim',    pos:'D',  ovr:86, note:'PLA' },
+      { name:'Pionk',      pos:'D',  ovr:85, note:'' },
+      { name:'Carlo',      pos:'D',  ovr:85, note:'' },
+      { name:'McCabe',     pos:'D',  ovr:85, note:'' },
+      { name:'Walker',     pos:'D',  ovr:84, note:'' },
+      { name:'Trouba',     pos:'D',  ovr:83, note:'Extra' },
+      { name:'Shesterkin', pos:'G',  ovr:90, note:'' },
+      { name:'Vladar',     pos:'G',  ovr:84, note:'' },
+    ]
+  },
+  firebirds: {
+    lines: [
+      { label:'Line 1', players:['McKenna','Celebrini','Helenius'] },
+      { label:'Line 2', players:['Peterka','Gauthier','Caufield'] },
+      { label:'Line 3', players:['Barbashev','Nelson','Killzachyn'] },
+      { label:'Line 4', players:['Tippet','Gourde','Esierman'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Nikishin','Fox'] },
+      { label:'Pair 2', players:['Hutson','Durzi'] },
+      { label:'Pair 3', players:['Anderson','Kesserling'] },
+    ],
+    players: [
+      { name:'McKenna',     pos:'LW', ovr:96, note:'' },
+      { name:'Celebrini',   pos:'C',  ovr:94, note:'' },
+      { name:'Helenius',    pos:'RW', ovr:83, note:'' },
+      { name:'Peterka',     pos:'RW', ovr:86, note:'' },
+      { name:'Gauthier',    pos:'LW', ovr:87, note:'' },
+      { name:'Caufield',    pos:'RW', ovr:90, note:'' },
+      { name:'Barbashev',   pos:'C',  ovr:86, note:'' },
+      { name:'Nelson',      pos:'C',  ovr:86, note:'' },
+      { name:'Killzachyn',  pos:'LW', ovr:86, note:'' },
+      { name:'Tippet',      pos:'LW', ovr:84, note:'' },
+      { name:'Gourde',      pos:'C',  ovr:83, note:'' },
+      { name:'Esierman',    pos:'C',  ovr:84, note:'' },
+      { name:'Nikishin',    pos:'D',  ovr:84, note:'' },
+      { name:'Fox',         pos:'D',  ovr:90, note:'' },
+      { name:'Hutson',      pos:'D',  ovr:90, note:'' },
+      { name:'Durzi',       pos:'D',  ovr:85, note:'' },
+      { name:'Anderson',    pos:'D',  ovr:86, note:'' },
+      { name:'Kesserling',  pos:'D',  ovr:84, note:'' },
+      { name:'Walman',      pos:'D',  ovr:83, note:'Extra' },
+      { name:'Graves',      pos:'D',  ovr:84, note:'Extra' },
+      { name:'Cossa',       pos:'G',  ovr:89, note:'' },
+    ]
+  },
+  outlaws: {
+    lines: [
+      { label:'Line 1', players:['Raymond','Thompson','Johnston'] },
+      { label:'Line 2', players:['Slaf','Schmaltz','J.T. Miller'] },
+      { label:'Line 3', players:['Lavoie','Wright','Coyle'] },
+      { label:'Line 4', players:['Marchessault','E. Lindholm','Mantha'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Werenski','Simashev'] },
+      { label:'Pair 2', players:['Power','Letang'] },
+      { label:'Pair 3', players:['Mintykov','Nemec'] },
+    ],
+    players: [
+      { name:'Raymond',       pos:'LW', ovr:89, note:'' },
+      { name:'Thompson',      pos:'C',  ovr:91, note:'' },
+      { name:'Johnston',      pos:'RW', ovr:91, note:'' },
+      { name:'Slaf',          pos:'LW', ovr:87, note:'' },
+      { name:'Schmaltz',      pos:'C',  ovr:87, note:'' },
+      { name:'J.T. Miller',   pos:'C',  ovr:87, note:'' },
+      { name:'Lavoie',        pos:'LW', ovr:85, note:'' },
+      { name:'Wright',        pos:'C',  ovr:84, note:'' },
+      { name:'Coyle',         pos:'C',  ovr:85, note:'' },
+      { name:'Marchessault',  pos:'RW', ovr:84, note:'' },
+      { name:'E. Lindholm',   pos:'C',  ovr:84, note:'' },
+      { name:'Mantha',        pos:'LW', ovr:84, note:'' },
+      { name:'Werenski',      pos:'D',  ovr:94, note:'' },
+      { name:'Simashev',      pos:'D',  ovr:84, note:'' },
+      { name:'Power',         pos:'D',  ovr:85, note:'' },
+      { name:'Letang',        pos:'D',  ovr:86, note:'' },
+      { name:'Mintykov',      pos:'D',  ovr:84, note:'' },
+      { name:'Nemec',         pos:'D',  ovr:85, note:'' },
+      { name:'Hellebuyck',    pos:'G',  ovr:92, note:'' },
+      { name:'Levi',          pos:'G',  ovr:79, note:'' },
+      { name:'Morgan Frost',  pos:'C',  ovr:83, note:'Scratched' },
+      { name:'M. Kesselring', pos:'D',  ovr:0,  note:'Scratched' },
+    ]
+  },
+  vipers: {
+    lines: [
+      { label:'Line 1', players:['DeBrincatt','Barkov','Guenther'] },
+      { label:'Line 2', players:['Kaprizov','Misa','Kasper'] },
+      { label:'Line 3', players:['Svechnikov','Necas','Hyman'] },
+      { label:'Line 4', players:['Landeskog','Byfield','Laine'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Slavin','Josi'] },
+      { label:'Pair 2', players:['LaCombe','Weegar'] },
+      { label:'Pair 3', players:['Gavrikov','Broberg'] },
+    ],
+    players: [
+      { name:'DeBrincatt',  pos:'LW', ovr:0, note:'' },
+      { name:'Barkov',      pos:'C',  ovr:0, note:'' },
+      { name:'Guenther',    pos:'RW', ovr:0, note:'' },
+      { name:'Kaprizov',    pos:'LW', ovr:0, note:'' },
+      { name:'Misa',        pos:'C',  ovr:0, note:'' },
+      { name:'Kasper',      pos:'C',  ovr:0, note:'' },
+      { name:'Svechnikov',  pos:'LW', ovr:0, note:'' },
+      { name:'Necas',       pos:'C',  ovr:0, note:'' },
+      { name:'Hyman',       pos:'LW', ovr:0, note:'' },
+      { name:'Landeskog',   pos:'LW', ovr:0, note:'' },
+      { name:'Byfield',     pos:'C',  ovr:0, note:'' },
+      { name:'Laine',       pos:'LW', ovr:0, note:'' },
+      { name:'Dubois',      pos:'C',  ovr:0, note:'Extra' },
+      { name:'Nurse',       pos:'D',  ovr:0, note:'Extra' },
+      { name:'Slavin',      pos:'D',  ovr:0, note:'' },
+      { name:'Josi',        pos:'D',  ovr:0, note:'' },
+      { name:'LaCombe',     pos:'D',  ovr:0, note:'' },
+      { name:'Weegar',      pos:'D',  ovr:0, note:'' },
+      { name:'Gavrikov',    pos:'D',  ovr:0, note:'' },
+      { name:'Broberg',     pos:'D',  ovr:0, note:'' },
+      { name:'Vasilevskiy', pos:'G',  ovr:0, note:'' },
+      { name:'Woll',        pos:'G',  ovr:0, note:'' },
+    ]
+  },
+  ghostpirates: { lines:[], dpairs:[], players:[], note:'Roster coming soon' },
+  voyageurs: {
+    lines: [
+      { label:'Line 1', players:['Connor','MacLordan','Hagens'] },
+      { label:'Line 2', players:['Dorofeyev','Strome','Knies'] },
+      { label:'Line 3', players:['Holloway','Lundell','Wilson'] },
+      { label:'Line 4', players:['Lafreniere','Mittelstadt','Roslovic'] },
+    ],
+    dpairs: [
+      { label:'Pair 1', players:['Harley','McAvoy'] },
+      { label:'Pair 2', players:['Montour','Zub'] },
+      { label:'Pair 3', players:['Tanev','Tucker'] },
+    ],
+    players: [
+      { name:'Connor',       pos:'LW', ovr:0, note:'' },
+      { name:'MacLordan',    pos:'C',  ovr:0, note:'' },
+      { name:'Hagens',       pos:'C',  ovr:0, note:'' },
+      { name:'Dorofeyev',    pos:'LW', ovr:0, note:'' },
+      { name:'Strome',       pos:'C',  ovr:0, note:'' },
+      { name:'Knies',        pos:'LW', ovr:0, note:'' },
+      { name:'Holloway',     pos:'LW', ovr:0, note:'' },
+      { name:'Lundell',      pos:'C',  ovr:0, note:'' },
+      { name:'Wilson',       pos:'RW', ovr:0, note:'' },
+      { name:'Lafreniere',   pos:'LW', ovr:0, note:'' },
+      { name:'Mittelstadt',  pos:'C',  ovr:0, note:'' },
+      { name:'Roslovic',     pos:'C',  ovr:0, note:'' },
+      { name:'Harley',       pos:'D',  ovr:0, note:'' },
+      { name:'McAvoy',       pos:'D',  ovr:0, note:'' },
+      { name:'Montour',      pos:'D',  ovr:0, note:'' },
+      { name:'Zub',          pos:'D',  ovr:0, note:'' },
+      { name:'Tanev',        pos:'D',  ovr:0, note:'' },
+      { name:'Tucker',       pos:'D',  ovr:0, note:'' },
+      { name:'Swayman',      pos:'G',  ovr:0, note:'' },
+      { name:'Gustavsson',   pos:'G',  ovr:0, note:'' },
+    ]
+  },
+  storm:    { lines:[], dpairs:[], players:[], note:'Roster coming soon' },
+  rams:     { lines:[], dpairs:[], players:[], note:'Roster coming soon' },
+  waves:    { lines:[], dpairs:[], players:[], note:'Roster coming soon' },
+  longhorns:{ lines:[], dpairs:[], players:[], note:'OVRs coming soon — roster to be confirmed' },
+};
+
+const STATS = loadStatsFromStorage();
+
+function loadStatsFromStorage(){
+  try { return JSON.parse(localStorage.getItem('hcaStats') || '{}') || {}; }
+  catch (err) { return {}; }
+}
+
+function saveStatsToStorage(){
+  localStorage.setItem('hcaStats', JSON.stringify(STATS));
+}
+
+function toggleStatsEditor(){
+  const editor = document.getElementById('admin-stats-editor');
+  if(editor.style.display === 'block'){
+    editor.style.display = 'none';
+    return;
+  }
+  editor.style.display = 'block';
+  renderStatsEditor();
+}
+
+function renderStatsEditor(){
+  const select = document.getElementById('stats-team-select');
+  if(!select) return;
+  select.innerHTML = TEAMS.map(t=>`<option value="${t.id}">${t.city} ${t.name}</option>`).join('');
+  populateStatsEditor();
+}
+
+function populateStatsEditor(){
+  const teamId = document.getElementById('stats-team-select').value;
+  const stats = STATS[teamId] || { gp:0, g:0, a:0, pts:0, plusminus:0, pim:0 };
+  document.getElementById('stats-gp').value = stats.gp ?? 0;
+  document.getElementById('stats-g').value = stats.g ?? 0;
+  document.getElementById('stats-a').value = stats.a ?? 0;
+  document.getElementById('stats-pts').value = stats.pts ?? 0;
+  document.getElementById('stats-plusminus').value = stats.plusminus ?? 0;
+  document.getElementById('stats-pim').value = stats.pim ?? 0;
+  document.getElementById('stats-editor-feedback').textContent = '';
+}
+
+function saveStatsFromEditor(){
+  const teamId = document.getElementById('stats-team-select').value;
+  STATS[teamId] = {
+    gp: Number(document.getElementById('stats-gp').value) || 0,
+    g: Number(document.getElementById('stats-g').value) || 0,
+    a: Number(document.getElementById('stats-a').value) || 0,
+    pts: Number(document.getElementById('stats-pts').value) || 0,
+    plusminus: Number(document.getElementById('stats-plusminus').value) || 0,
+    pim: Number(document.getElementById('stats-pim').value) || 0,
+  };
+  saveStatsToStorage();
+  renderStatsPage();
+  document.getElementById('stats-editor-feedback').textContent = 'Stats saved successfully. Visit the Stats page to review.';
+}
+
+function renderStatsPage(){
+  const container = document.getElementById('stats-content');
+  if(!container) return;
+  const entries = Object.entries(STATS).filter(([_,data]) => data && Object.keys(data).length);
+  if(!entries.length){
+    container.innerHTML = `<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:2rem;text-align:center;color:var(--text-dim);">
+      <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.5rem;color:var(--text-muted);">Official stats are not yet entered</div>
+      <div>Open the Commissioner portal and use the stats manager to add team statistics.</div>
+    </div>`;
+    return;
+  }
+  const rows = entries.map(([teamId,stats]) => {
+    const team = TEAMS.find(t=>t.id===teamId) || { city:'Unknown', name:'Unknown' };
+    return `<tr>
+      <td>${team.city} ${team.name}</td>
+      <td>${stats.gp}</td>
+      <td>${stats.g}</td>
+      <td>${stats.a}</td>
+      <td>${stats.pts}</td>
+      <td>${stats.plusminus}</td>
+      <td>${stats.pim}</td>
+    </tr>`;
+  }).join('');
+  container.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table class="stats-table">
+        <thead><tr>
+          <th>Team</th><th>GP</th><th>G</th><th>A</th><th>PTS</th><th>+/-</th><th>PIM</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const nav=document.getElementById('nav-'+id);
+  if(nav) nav.classList.add('active');
+  window.scrollTo(0,0);
+}
+function showTeamsList(){
+  document.getElementById('rosters-teams-view').style.display='block';
+  document.getElementById('roster-detail-view').style.display='none';
+}
+function showAdminPanel(){
+  document.getElementById('admin-login-view').style.display='none';
+  document.getElementById('admin-panel-view').style.display='block';
+}
+
+function renderTeamCard(t, onclick){
+  return `<div class="team-card" style="border-left-color:${t.color1};" onclick="${onclick}">
+    <div class="team-card-name" style="color:${t.color1}">${t.name}</div>
+    <div class="team-card-city">${t.city} · ${t.conf}</div>
+    <div class="team-card-stats">
+      <div class="team-card-stat"><strong>${t.w}-${t.l}-${t.otl}</strong>Record</div>
+      <div class="team-card-stat"><strong>${t.pts}</strong>PTS</div>
+    </div>
+  </div>`;
+}
+
+function renderStandings(){
+  const east=TEAMS.filter(t=>t.conf==='East');
+  const west=TEAMS.filter(t=>t.conf==='West');
+  const makeTable=(teams)=>`
+    <table class="standings-table">
+      <thead><tr>
+        <th>Team</th><th>GP</th><th>W</th><th>L</th><th>OTL</th><th>PTS</th><th>GD</th>
+      </tr></thead>
+      <tbody>
+        ${teams.map((t,i)=>`<tr onclick="showPage('rosters');showTeam('${t.id}')" style="cursor:pointer;">
+          <td><div class="team-cell">
+            <div class="team-swatch" style="background:${t.color1}"></div>
+            <div class="team-rank">${i+1}</div>
+            <div><div class="team-name-cell">${t.name}</div><div class="team-city">${t.city}</div></div>
+          </div></td>
+          <td>${t.gp}</td><td>${t.w}</td><td>${t.l}</td><td>${t.otl}</td>
+          <td class="pts-cell">${t.pts}</td>
+          <td style="color:var(--text-dim)">—</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  document.getElementById('standings-content').innerHTML=`
+    <div class="conf-block">
+      <div class="conf-title">Eastern Conference</div>
+      ${makeTable(east)}
+    </div>
+    <div class="conf-block">
+      <div class="conf-title">Western Conference</div>
+      ${makeTable(west)}
+    </div>`;
+}
+
+function renderAllTeamsGrids(){
+  const cards=TEAMS.map(t=>renderTeamCard(t,`showPage('rosters');showTeam('${t.id}')`)).join('');
+  document.getElementById('home-teams-grid').innerHTML=cards;
+  document.getElementById('rosters-teams-grid').innerHTML=cards;
+
+  // home conference panels
+  const east=TEAMS.filter(t=>t.conf==='East');
+  const west=TEAMS.filter(t=>t.conf==='West');
+  document.getElementById('home-east-top').innerHTML=east.slice(0,4).map(t=>`
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:3px;height:18px;background:${t.color1};border-radius:2px;flex-shrink:0;"></div>
+      <span style="font-family:var(--font-display);font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;">${t.city} ${t.name}</span>
+    </div>`).join('');
+  document.getElementById('home-west-top').innerHTML=west.slice(0,4).map(t=>`
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:3px;height:18px;background:${t.color1};border-radius:2px;flex-shrink:0;"></div>
+      <span style="font-family:var(--font-display);font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;">${t.city} ${t.name}</span>
+    </div>`).join('');
+}
+
+function showTeam(teamId){
+  const team=TEAMS.find(t=>t.id===teamId);
+  const roster=ROSTERS[teamId]||{lines:[],dpairs:[],players:[],note:'Roster coming soon'};
+  const view=document.getElementById('roster-detail-view');
+
+  const lineSections=(pairs,title,cols)=>{
+    if(!pairs||!pairs.length) return '';
+    return `<div style="margin-bottom:2rem;">
+      <div class="lines-title">${title}</div>
+      <div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:0.85rem;">
+        ${pairs.map(g=>`<div>
+          <div class="line-label">${g.label}</div>
+          ${g.players.map(p=>`<div class="line-player"><strong>${p}</strong></div>`).join('')}
+        </div>`).join('')}
+      </div>
+    </div>`;
+  };
+
+  const rosterTable=roster.players&&roster.players.length?`
+    <div style="margin-bottom:2rem;">
+      <div class="lines-title">Full Roster</div>
+      <table class="roster-table">
+        <thead><tr>
+          <th>Player</th><th class="center">POS</th><th class="center">OVR</th><th>Note</th>
+        </tr></thead>
+        <tbody>
+          ${roster.players.map(p=>`<tr>
+            <td class="player-name">${p.name}</td>
+            <td class="center"><span class="pos-badge">${p.pos}</span></td>
+            <td class="center ovr-cell">${p.ovr>0?p.ovr:'—'}</td>
+            <td style="font-size:0.78rem;color:var(--text-dim);">${p.note||''}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`:`<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:1.5rem;text-align:center;color:var(--text-dim);margin-bottom:2rem;">
+      <div style="font-family:var(--font-display);font-size:1rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:0.25rem;color:var(--text-muted);">${roster.note||'Roster Coming Soon'}</div>
+    </div>`;
+
+  view.innerHTML=`
+    <div class="back-btn" onclick="showTeamsList()">← All Teams</div>
+    <div class="roster-hero">
+      <div class="roster-logo" style="background:${team.color1}22;color:${team.color1};">${team.name.slice(0,2).toUpperCase()}</div>
+      <div>
+        <div class="roster-team-city">${team.city}</div>
+        <div class="roster-team-name" style="color:${team.color1}">${team.name}</div>
+        <div class="roster-meta">
+          <div class="roster-meta-item">${team.w}-${team.l}-${team.otl} &nbsp;<strong>${team.pts} PTS</strong></div>
+          <div class="roster-meta-item">${team.conf} Conference</div>
+        </div>
+      </div>
+    </div>
+    ${lineSections(roster.lines,'Forward Lines',4)}
+    ${lineSections(roster.dpairs,'Defensive Pairings',3)}
+    ${rosterTable}`;
+
+  document.getElementById('rosters-teams-view').style.display='none';
+  view.style.display='block';
+}
+
+renderStandings();
+renderAllTeamsGrids();
+renderStatsPage();
+</script>
+</body>
+</html>
